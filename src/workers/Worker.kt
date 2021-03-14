@@ -1,4 +1,4 @@
-package pl.essekkat
+package pl.essekkat.workers
 
 import java.time.Duration
 

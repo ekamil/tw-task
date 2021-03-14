@@ -1,4 +1,4 @@
-package pl.essekkat
+package pl.essekkat.shifts
 
 import java.time.LocalDateTime
 

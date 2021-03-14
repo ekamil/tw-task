@@ -9,6 +9,12 @@ import io.ktor.jackson.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import pl.essekkat.shifts.InMemoryShiftsRepo
+import pl.essekkat.shifts.Shift
+import pl.essekkat.shifts.ShiftsRepo
+import pl.essekkat.workers.InMemoryWorkersRepo
+import pl.essekkat.workers.Worker
+import pl.essekkat.workers.WorkersRepo
 import java.util.*
 
 
@@ -21,6 +27,7 @@ fun Application.module(
     workersRepo: WorkersRepo = InMemoryWorkersRepo(),
     shiftsRepo: ShiftsRepo = InMemoryShiftsRepo()
 ) {
+    val service = Service(workersRepo, shiftsRepo)
 
     install(ContentNegotiation) {
         jackson(contentType = ContentType.Application.Json) {
@@ -100,9 +107,7 @@ fun Application.module(
                             }
                             val newShift: Shift = call.receive<ShiftDTO>()
                                 .let { Shift(start = it.start, end = it.end) }
-                            val shifts: List<Shift> = shiftsRepo.listByWorker(workerId)
-                            // TODO: checks
-                            shiftsRepo.addForWorker(workerId, newShift)
+                            service.addNewShift(worker.get(), newShift)
                             call.respond(HttpStatusCode.NoContent)
                         }
                     }

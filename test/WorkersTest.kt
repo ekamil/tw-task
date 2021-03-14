@@ -6,6 +6,8 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.every
 import io.mockk.mockk
+import pl.essekkat.workers.Worker
+import pl.essekkat.workers.WorkersRepo
 import java.time.Duration
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -1,4 +1,6 @@
-package pl.essekkat
+package pl.essekkat.shifts
+
+import pl.essekkat.workers.WorkerId
 
 class InMemoryShiftsRepo : ShiftsRepo {
     private val store = mutableMapOf<WorkerId, MutableList<Shift>>()

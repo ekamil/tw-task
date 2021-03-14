@@ -8,8 +8,12 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.Before
+import pl.essekkat.shifts.InMemoryShiftsRepo
+import pl.essekkat.shifts.Shift
+import pl.essekkat.shifts.ShiftsRepo
+import pl.essekkat.workers.Worker
+import pl.essekkat.workers.WorkersRepo
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
