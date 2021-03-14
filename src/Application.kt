@@ -40,10 +40,7 @@ fun Application.module(
                 get {
                     val workers = workersRepo.list()
                         .map {
-                            mapOf(
-                                "id" to it.id,
-                                "time_off" to it.mandatoryTimeOff.toString()
-                            )
+                            WorkerDTO(id = it.id, timeOff = it.mandatoryTimeOff.toString())
                         }
                     call.respond(workers)
                 }

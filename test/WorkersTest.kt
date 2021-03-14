@@ -1,6 +1,7 @@
 package pl.essekkat
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.every
@@ -88,9 +89,10 @@ class WorkersTest {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertNotEquals("[ ]", response.content)
                 val mapper = jacksonObjectMapper()
-                val workers = mapper.readTree(response.content)
-                assertEquals(true, workers.isArray)
-                assertEquals(2, workers.size())
+                val workers: List<WorkerDTO> = mapper.readValue(response.content ?: "[]")
+                assertEquals(2, workers.size)
+                assertEquals("PT12H", workers[0].timeOff)
+                assertEquals("PT24H", workers[1].timeOff)
             }
         }
     }
