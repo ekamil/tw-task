@@ -1,10 +1,8 @@
 package pl.essekkat
 
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 
 data class Shift(
-    val workerId: WorkerId,
-    val start: ZonedDateTime,
-    val end: ZonedDateTime,
-    val isWorking: Boolean = true
+    val start: LocalDateTime,
+    val end: LocalDateTime,
 )

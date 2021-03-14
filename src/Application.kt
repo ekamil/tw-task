@@ -1,6 +1,7 @@
 package pl.essekkat
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -8,6 +9,8 @@ import io.ktor.jackson.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import java.util.*
+
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -22,6 +25,8 @@ fun Application.module(
     install(ContentNegotiation) {
         jackson(contentType = ContentType.Application.Json) {
             enable(SerializationFeature.INDENT_OUTPUT)
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            registerModule(JavaTimeModule())
         }
     }
 
@@ -44,15 +49,62 @@ fun Application.module(
                         }
                     call.respond(workers)
                 }
-                get("/{workerId}") {
-                    val worker = call.parameters["workerId"]
-                        ?.let {
-                            workersRepo.get(it)
+                route("/{workerId}") {
+                    get {
+                        val worker = call.parameters["workerId"]
+                            ?.let {
+                                workersRepo.get(it)
+                            }
+                        if (worker?.isPresent == true) {
+                            call.respond(worker.get())
+                        } else {
+                            call.respond(HttpStatusCode.NotFound)
                         }
-                    if (worker?.isPresent == true) {
-                        call.respond(worker.get())
-                    } else {
-                        call.respond(HttpStatusCode.NotFound)
+                    }
+                    route("/shifts") {
+                        get {
+                            val workerId = call.parameters["workerId"]
+                            if (workerId.isNullOrEmpty()) {
+                                call.respond(HttpStatusCode.BadRequest)
+                                return@get
+                            }
+                            val worker = workersRepo.get(workerId)
+                            if (!worker.isPresent) {
+                                call.respond(HttpStatusCode.NotFound)
+                                return@get
+                            }
+                            val shifts: List<ShiftDTO> = shiftsRepo.listByWorker(workerId)
+                                .map {
+                                    ShiftDTO(
+                                        start = it.start,
+                                        end = it.end
+                                    )
+                                }.toList()
+                            call.respond(
+                                WorkerWithShiftsDTO(
+                                    id = workerId,
+                                    shifts = shifts
+                                )
+                            )
+                        }
+                        post {
+                            val workerId = call.parameters["workerId"]
+                            if (workerId.isNullOrEmpty()) {
+                                call.respond(HttpStatusCode.BadRequest)
+                                return@post
+                            }
+                            val worker = workersRepo.get(workerId)
+                            if (!worker.isPresent) {
+                                call.respond(HttpStatusCode.NotFound)
+                                return@post
+                            }
+                            val newShift: Shift = call.receive<ShiftDTO>()
+                                .let { Shift(start = it.start, end = it.end) }
+                            val shifts: List<Shift> = shiftsRepo.listByWorker(workerId)
+                            // TODO: checks
+                            shiftsRepo.addForWorker(workerId, newShift)
+                            call.respond(HttpStatusCode.NoContent)
+                        }
                     }
                 }
             }

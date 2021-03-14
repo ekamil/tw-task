@@ -1,13 +1,19 @@
 package pl.essekkat
 
 class InMemoryShiftsRepo : ShiftsRepo {
-    private val store = mutableListOf<Shift>()
+    private val store = mutableMapOf<WorkerId, MutableList<Shift>>()
 
-    override fun listByWorker(workerId: WorkerId): List<Shift> =
-        store.filter { it.workerId == workerId }
+    override fun listByWorker(workerId: WorkerId): List<Shift> {
+        return store[workerId] ?: emptyList()
+    }
 
-    override fun addForWorker(shift: Shift) {
-        store.add(shift)
+    override fun addForWorker(workerId: WorkerId, shift: Shift) {
+        if (workerId in store) {
+            store[workerId]
+                ?.apply { this.add(shift) }
+        } else {
+            store[workerId] = mutableListOf(shift)
+        }
     }
 
 }
