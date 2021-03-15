@@ -107,8 +107,12 @@ fun Application.module(
                             }
                             val newShift: Shift = call.receive<ShiftDTO>()
                                 .let { Shift(start = it.start, end = it.end) }
-                            service.addNewShift(worker.get(), newShift)
-                            call.respond(HttpStatusCode.NoContent)
+                            try {
+                                service.addNewShift(worker.get(), newShift)
+                                call.respond(HttpStatusCode.NoContent)
+                            } catch (e: SchedulingError) {
+                                call.respond(HttpStatusCode.Conflict, e.message.orEmpty())
+                            }
                         }
                     }
                 }

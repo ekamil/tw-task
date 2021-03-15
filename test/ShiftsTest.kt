@@ -18,6 +18,7 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class ShiftsTest {
     @MockK
@@ -112,8 +113,8 @@ class ShiftsTest {
                 setBody(
                     """[
   {
-    "start": "2021-03-10T12:00:00.000+02:00",
-    "end": "2021-03-10T16:00:00.000+02:00"
+    "start": "2021-03-10T12:00:00",
+    "end": "2021-03-10T16:00:00"
   }
 ]
 """
@@ -139,8 +140,8 @@ class ShiftsTest {
         every { shiftsRepo.listByWorker(workerId) } answers {
             listOf(
                 Shift(
-                    start = LocalDateTime.parse( "2021-03-10T12:00:00.000+02:00"),
-                    end = LocalDateTime.parse( "2021-03-10T16:00:00.000+02:00")
+                    start = LocalDateTime.parse("2021-03-10T12:00:00"),
+                    end = LocalDateTime.parse("2021-03-10T16:00:00")
                 )
             )
         }
@@ -155,8 +156,8 @@ class ShiftsTest {
                 setBody(
                     """
   {
-    "start": "2021-03-10T17:00:00.000+02:00",
-    "end": "2021-03-10T21:00:00.000+02:00"
+    "start": "2021-03-10T17:00:00",
+    "end": "2021-03-10T21:00:00"
   }
 """
                 )
@@ -177,6 +178,14 @@ class ShiftsTest {
                 )
             )
         )
+        every { shiftsRepo.listByWorker(workerId) } answers {
+            listOf(
+                Shift(
+                    start = LocalDateTime.parse("2021-03-10T12:00:00"),
+                    end = LocalDateTime.parse("2021-03-10T16:00:00")
+                )
+            )
+        }
         withTestApplication({
             module(
                 testing = true,
@@ -186,22 +195,29 @@ class ShiftsTest {
         }) {
             handleRequest(HttpMethod.Post, "/v1/workers/$workerId/shifts") {
                 setBody(
-                    """[
+                    """
   {
-    "start": "2021-03-10T12:00:00.000+02:00",
-    "end": "2021-03-10T16:00:00.000+02:00"
-  },
-  {
-    "start": "2021-03-10T15:00:00.000+02:00",
-    "end": "2021-03-10T19:00:00.000+02:00"
+    "start": "2021-03-10T15:00:00",
+    "end": "2021-03-10T19:00:00"
   }
-]
 """
                 )
                 addHeader("Content-Type", ContentType.Application.Json.toString())
             }.apply {
                 assertEquals(HttpStatusCode.Conflict, response.status())
             }
+        }
+    }
+
+    @Test
+    fun `shift has to move forward in time`() {
+        assertFailsWith<AssertionError>(
+            message = "Shift end has to be after shift's start"
+        ) {
+            Shift(
+                start = LocalDateTime.parse("2021-03-11T12:00:00"),
+                end = LocalDateTime.parse("2021-03-10T16:00:00")
+            )
         }
     }
 }
