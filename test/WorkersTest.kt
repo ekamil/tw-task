@@ -17,7 +17,7 @@ class WorkersTest {
     @Test
     fun `created worker can be retrieved`() {
         val workerId = "worker1"
-        withTestApplication({ module(testing = true) }) {
+        withTestApplication({ module() }) {
             handleRequest(HttpMethod.Post, "/v1/workers") {
                 setBody(
                     "{\n  \"id\": \"$workerId\"\n}"
@@ -38,7 +38,7 @@ class WorkersTest {
     @Test
     fun `create method is idempotent`() {
         val workerId = "worker1"
-        withTestApplication({ module(testing = true) }) {
+        withTestApplication({ module() }) {
             handleRequest(HttpMethod.Post, "/v1/workers") {
                 setBody(
                     "{\n  \"id\": \"$workerId\"\n}"
@@ -60,7 +60,7 @@ class WorkersTest {
 
     @Test
     fun `non existent worker isn't returned`() {
-        withTestApplication({ module(testing = true) }) {
+        withTestApplication({ module() }) {
             handleRequest(HttpMethod.Get, "/v1/workers/non-existent-worker").apply {
                 assertEquals(HttpStatusCode.NotFound, response.status())
             }
@@ -69,7 +69,7 @@ class WorkersTest {
 
     @Test
     fun `can list workers (empty)`() {
-        withTestApplication({ module(testing = true) }) {
+        withTestApplication({ module() }) {
             handleRequest(HttpMethod.Get, "/v1/workers").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("[ ]", response.content)
@@ -86,7 +86,7 @@ class WorkersTest {
                 Worker(id = "worker-2", mandatoryTimeOff = Duration.ofHours(24)),
             )
         }
-        withTestApplication({ module(testing = true, workersRepo = workersRepo) }) {
+        withTestApplication({ module(workersRepo = workersRepo) }) {
             handleRequest(HttpMethod.Get, "/v1/workers").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertNotEquals("[ ]", response.content)

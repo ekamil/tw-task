@@ -37,7 +37,6 @@ class ShiftsTest {
         shiftsRepo = InMemoryShiftsRepo()
         withTestApplication({
             module(
-                testing = true,
                 workersRepo = workersRepo,
                 shiftsRepo = shiftsRepo
             )
@@ -71,7 +70,6 @@ class ShiftsTest {
         shiftsRepo = InMemoryShiftsRepo()
         withTestApplication({
             module(
-                testing = true,
                 workersRepo = workersRepo,
                 shiftsRepo = shiftsRepo
             )
@@ -104,7 +102,6 @@ class ShiftsTest {
         every { workersRepo.get(workerId) }.returns(Optional.empty())
         withTestApplication({
             module(
-                testing = true,
                 workersRepo = workersRepo,
                 shiftsRepo = shiftsRepo
             )
@@ -147,7 +144,6 @@ class ShiftsTest {
         }
         withTestApplication({
             module(
-                testing = true,
                 workersRepo = workersRepo,
                 shiftsRepo = shiftsRepo
             )
@@ -188,7 +184,6 @@ class ShiftsTest {
         }
         withTestApplication({
             module(
-                testing = true,
                 workersRepo = workersRepo,
                 shiftsRepo = shiftsRepo
             )
