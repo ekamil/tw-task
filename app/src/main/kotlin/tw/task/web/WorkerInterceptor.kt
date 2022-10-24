@@ -1,12 +1,12 @@
-package pl.essekkat.web
+package tw.task.web
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.util.*
-import pl.essekkat.workers.Worker
-import pl.essekkat.workers.WorkersRepo
+import tw.task.workers.Worker
+import tw.task.workers.WorkersRepo
 
 val WorkerAttribute = AttributeKey<Worker>("Worker")
 

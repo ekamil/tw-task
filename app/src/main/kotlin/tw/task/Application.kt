@@ -1,28 +1,27 @@
-package pl.essekkat
+package tw.task
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.jackson.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import pl.essekkat.shifts.InMemoryShiftsRepo
-import pl.essekkat.shifts.Shift
-import pl.essekkat.shifts.ShiftsRepo
-import pl.essekkat.web.WorkerAttribute
-import pl.essekkat.web.workerInterceptor
-import pl.essekkat.workers.InMemoryWorkersRepo
-import pl.essekkat.workers.Worker
-import pl.essekkat.workers.WorkersRepo
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import tw.task.shifts.InMemoryShiftsRepo
+import tw.task.shifts.Shift
+import tw.task.shifts.ShiftsRepo
+import tw.task.web.*
+import tw.task.workers.InMemoryWorkersRepo
+import tw.task.workers.Worker
+import tw.task.workers.WorkersRepo
 
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
+@JvmOverloads
 fun Application.module(
     workersRepo: WorkersRepo = InMemoryWorkersRepo(),
     shiftsRepo: ShiftsRepo = InMemoryShiftsRepo()

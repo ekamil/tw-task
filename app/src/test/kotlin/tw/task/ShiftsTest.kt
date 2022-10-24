@@ -1,5 +1,6 @@
-package pl.essekkat
+package tw.task
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
@@ -8,11 +9,12 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.Before
-import pl.essekkat.shifts.InMemoryShiftsRepo
-import pl.essekkat.shifts.Shift
-import pl.essekkat.shifts.ShiftsRepo
-import pl.essekkat.workers.Worker
-import pl.essekkat.workers.WorkersRepo
+import tw.task.shifts.InMemoryShiftsRepo
+import tw.task.shifts.Shift
+import tw.task.shifts.ShiftsRepo
+import tw.task.web.WorkerWithShiftsDTO
+import tw.task.workers.Worker
+import tw.task.workers.WorkersRepo
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
@@ -89,7 +91,7 @@ class ShiftsTest {
             }
             handleRequest(HttpMethod.Get, "/v1/workers/$workerId/shifts") {}.apply {
                 assertEquals(HttpStatusCode.OK, response.status())
-                val mapper = jacksonObjectMapper()
+                val mapper: ObjectMapper = jacksonObjectMapper()
                 val wws: WorkerWithShiftsDTO = mapper.readValue(response.content ?: "[]")
                 assertEquals(1, wws.shifts.size)
             }

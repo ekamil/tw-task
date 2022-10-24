@@ -1,4 +1,4 @@
-package pl.essekkat
+package tw.task.web
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize

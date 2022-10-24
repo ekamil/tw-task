@@ -1,4 +1,4 @@
-package pl.essekkat
+package tw.task
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -6,8 +6,9 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.every
 import io.mockk.mockk
-import pl.essekkat.workers.Worker
-import pl.essekkat.workers.WorkersRepo
+import tw.task.web.WorkerDTO
+import tw.task.workers.Worker
+import tw.task.workers.WorkersRepo
 import java.time.Duration
 import kotlin.test.Test
 import kotlin.test.assertEquals

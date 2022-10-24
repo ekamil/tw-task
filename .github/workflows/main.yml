@@ -6,15 +6,12 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Set up JDK 14
+      - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 14
-      - name: Cache Maven packages
-        uses: actions/cache@v2
+          java-version: 17
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Run tests with Maven
-        run: mvn -B test --file pom.xml
+          arguments: build
+

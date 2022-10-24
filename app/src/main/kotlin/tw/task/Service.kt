@@ -1,9 +1,9 @@
-package pl.essekkat
+package tw.task
 
-import pl.essekkat.shifts.Shift
-import pl.essekkat.shifts.ShiftsRepo
-import pl.essekkat.workers.Worker
-import pl.essekkat.workers.WorkersRepo
+import tw.task.shifts.Shift
+import tw.task.shifts.ShiftsRepo
+import tw.task.workers.Worker
+import tw.task.workers.WorkersRepo
 import java.time.Duration
 
 class Service(private val workersRepo: WorkersRepo, private val shiftsRepo: ShiftsRepo) {

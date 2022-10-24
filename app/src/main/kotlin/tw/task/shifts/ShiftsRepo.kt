@@ -1,6 +1,6 @@
-package pl.essekkat.shifts
+package tw.task.shifts
 
-import pl.essekkat.workers.WorkerId
+import tw.task.workers.WorkerId
 
 interface ShiftsRepo {
     fun listByWorker(workerId: WorkerId): List<Shift>
