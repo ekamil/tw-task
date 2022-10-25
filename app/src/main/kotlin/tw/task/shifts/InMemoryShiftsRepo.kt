@@ -10,12 +10,10 @@ class InMemoryShiftsRepo : ShiftsRepo {
     }
 
     override fun addForWorker(workerId: WorkerId, shift: Shift) {
-        if (workerId in store) {
-            store[workerId]
-                ?.apply { this.add(shift) }
-        } else {
-            store[workerId] = mutableListOf(shift)
-        }
+        store[workerId]?.add(shift)
+//            ?: run {
+//                store[workerId] = mutableListOf(shift)
+//            }
     }
 
 }
