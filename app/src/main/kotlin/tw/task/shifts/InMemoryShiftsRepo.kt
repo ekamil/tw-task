@@ -11,9 +11,9 @@ class InMemoryShiftsRepo : ShiftsRepo {
 
     override fun addForWorker(workerId: WorkerId, shift: Shift) {
         store[workerId]?.add(shift)
-//            ?: run {
-//                store[workerId] = mutableListOf(shift)
-//            }
+            ?: run {
+                store[workerId] = mutableListOf(shift)
+            }
     }
 
 }
